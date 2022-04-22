@@ -91,23 +91,36 @@ function Survey() {
 
   return (
     <div className="survey-container">
-      Customer Survey
+      <h1 style={{ fontWeight: 800 }}>Customer Survey</h1>
       {pageToShow == "welcome" && (
         <div style={{ padding: 100, display: "flex", flexDirection: "column" }}>
           Welcome, To start the survey click below
-          <button onClick={handleSurveyStart} style={{ marginTop: 20 }}>
+          <button
+            className="start"
+            onClick={handleSurveyStart}
+            style={{ marginTop: 20 }}
+          >
             Start
           </button>
         </div>
       )}
       {pageToShow == "question" && (
         <>
-          <span style={{ alignSelf: "flex-end", marginTop: 100 }}>
+          <span
+            style={{
+              alignSelf: "flex-end",
+              marginTop: 50,
+              background: "#05595b",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "5px",
+            }}
+          >
             {questionIndex + 1}/{questions.length}
           </span>
           <div
             style={{
-              marginTop: 100,
+              marginTop: 50,
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
@@ -121,32 +134,38 @@ function Survey() {
               {[...Array(questions[questionIndex].maxRating)].map((e, i) => (
                 <div style={{ margin: 10 }} key={i}>
                   <input
+                    id={i}
                     type="radio"
                     name="rating"
                     value={i}
                     checked={ans == i}
                     onChange={onRatingChange}
                   />
-                  <label>{i + 1}</label>
+                  <label htmlFor={i}>{i + 1}</label>
                 </div>
               ))}
             </div>
           </div>
           <div
             style={{
-              marginBottom: 100,
+              marginBottom: 50,
               marginTop: 100,
               display: "flex",
               width: "60%",
               justifyContent: "space-between",
             }}
           >
-            <button onClick={handlePrevious} disabled={questionIndex == 0}>
+            <button
+              onClick={handlePrevious}
+              disabled={questionIndex == 0}
+              className="prev"
+            >
               Prev
             </button>
             <button
               onClick={handleNext}
               disabled={questionIndex == questions.length}
+              className="next"
             >
               Next
             </button>
