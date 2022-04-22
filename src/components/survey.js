@@ -6,12 +6,14 @@ function Survey() {
       num: 1,
       question: "How satisfied are you with our products?",
       maxRating: 5,
+      type: "RATING",
       ans: undefined,
     },
     {
       num: 2,
       question: "How fair are the prices compared to similar retailers?",
       maxRating: 5,
+      type: "RATING",
       ans: undefined,
     },
     {
@@ -19,6 +21,7 @@ function Survey() {
       question:
         "How satisfied are you with the value for money of your purchase?",
       maxRating: 5,
+      type: "RATING",
       ans: undefined,
     },
     {
@@ -26,29 +29,31 @@ function Survey() {
       question:
         "On a scale of 1-10 how would you recommend us to your friends and family?",
       maxRating: 10,
+      type: "RATING",
       ans: undefined,
     },
     {
       num: 5,
       question: "What could we do to improve our service?",
-      maxRating: 5,
+      type: "TEXT",
       ans: undefined,
     },
   ]);
 
+  const [name, setName] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [ans, setAns] = useState(undefined);
   const [pageToShow, setPageToShow] = useState("welcome");
 
   function handleNext() {
-    if (questionIndex == questions.length - 1) {
+    if (questionIndex === questions.length - 1) {
       if (window.confirm("Do you wish to submit the survey?")) {
         setPageToShow("thankyou");
         let surveyResponse = {
           questions: [...questions],
           completed: true,
         };
-        localStorage.setItem("surveyResponse", JSON.stringify(surveyResponse));
+        localStorage.setItem(name, JSON.stringify(surveyResponse));
         let temp = [...questions];
         temp.forEach((question) => {
           question.ans = undefined;
@@ -56,18 +61,13 @@ function Survey() {
         setQuestions(temp);
         setQuestionIndex(0);
         setAns(undefined);
+        setName("");
         setTimeout(() => {
           setPageToShow("welcome");
         }, 5000);
       }
       return;
     }
-    let data = {
-      num: questions[questionIndex].num,
-      question: questions[questionIndex].question,
-      ans: ans,
-    };
-    console.log(data);
     setAns(questions[questionIndex + 1].ans);
     setQuestionIndex(questionIndex + 1);
   }
@@ -92,19 +92,32 @@ function Survey() {
   return (
     <div className="survey-container">
       <h1 style={{ fontWeight: 800 }}>Customer Survey</h1>
-      {pageToShow == "welcome" && (
+
+      {/* show welcome section */}
+      {pageToShow === "welcome" && (
         <div style={{ padding: 100, display: "flex", flexDirection: "column" }}>
-          Welcome, To start the survey click below
+          <p style={{ marginBottom: 30 }}>
+            Welcome, To start the survey click below
+          </p>
+          <input
+            type="text"
+            value={name}
+            placeholder="Enter your Name"
+            onChange={(e) => setName(e.target.value)}
+          />
           <button
             className="start"
             onClick={handleSurveyStart}
             style={{ marginTop: 20 }}
+            disabled={name.length === 0}
           >
             Start
           </button>
         </div>
       )}
-      {pageToShow == "question" && (
+
+      {/* show question */}
+      {pageToShow === "question" && (
         <>
           <span
             style={{
@@ -130,26 +143,39 @@ function Survey() {
               {questions[questionIndex].num}.{" "}
               {questions[questionIndex].question}
             </p>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              {[...Array(questions[questionIndex].maxRating)].map((e, i) => (
-                <div style={{ margin: 10 }} key={i}>
-                  <input
-                    id={i}
-                    type="radio"
-                    name="rating"
-                    value={i}
-                    checked={ans == i}
-                    onChange={onRatingChange}
-                  />
-                  <label htmlFor={i}>{i + 1}</label>
-                </div>
-              ))}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 20,
+              }}
+            >
+              {questions[questionIndex].type == "RATING" ? (
+                [...Array(questions[questionIndex].maxRating)].map((e, i) => (
+                  <div style={{ margin: 10 }} key={i}>
+                    <input
+                      id={i}
+                      type="radio"
+                      name="rating"
+                      value={i}
+                      checked={parseInt(ans) === i}
+                      onChange={onRatingChange}
+                    />
+                    <label htmlFor={i}>{i + 1}</label>
+                  </div>
+                ))
+              ) : (
+                <input type="text" value={ans} onChange={onRatingChange} />
+              )}
             </div>
           </div>
           <div
             style={{
               marginBottom: 50,
-              marginTop: 100,
+              marginTop: 60,
               display: "flex",
               width: "60%",
               justifyContent: "space-between",
@@ -157,14 +183,14 @@ function Survey() {
           >
             <button
               onClick={handlePrevious}
-              disabled={questionIndex == 0}
+              disabled={questionIndex === 0}
               className="prev"
             >
               Prev
             </button>
             <button
               onClick={handleNext}
-              disabled={questionIndex == questions.length}
+              disabled={questionIndex === questions.length}
               className="next"
             >
               Next
@@ -172,7 +198,9 @@ function Survey() {
           </div>
         </>
       )}
-      {pageToShow == "thankyou" && (
+
+      {/* show thanyou section */}
+      {pageToShow === "thankyou" && (
         <div style={{ padding: 100 }}>
           ThankYou for taking your time to fill this survey
         </div>

@@ -24,15 +24,21 @@
   justify-content: center;
 }
 
-.next,
-.prev,
-.start {
+button {
   padding: 10px 25px;
   border-radius: 5px;
   border: none;
-  font-weight: 400;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: "Montserrat";
   background: #05595b;
   color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #dfdfde;
+  color: #7a7a7a;
 }
 
 .start {
@@ -49,9 +55,23 @@ label {
   padding: 10px 15px;
   background: white;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 input[type="radio"]:checked + label {
   background: #05595b;
   color: white;
+}
+
+input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  /* min-width: 500px; */
+  /* margin: 1px; */
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "Montserrat";
+  border: 1px solid black;
+  border-radius: 5px;
 }
