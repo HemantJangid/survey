@@ -153,7 +153,7 @@ function Survey() {
                 marginTop: 20,
               }}
             >
-              {questions[questionIndex].type == "RATING" ? (
+              {questions[questionIndex].type === "RATING" ? (
                 [...Array(questions[questionIndex].maxRating)].map((e, i) => (
                   <div style={{ margin: 10 }} key={i}>
                     <input
